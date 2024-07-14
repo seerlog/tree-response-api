@@ -31,21 +31,20 @@ public class EqptService {
     }
 
     private EqptMenuVo convertToTree(List<EqptMenuVo> eqptMenus) {
-        EqptMenuVo root = eqptMenus.stream()
-                .filter(vo -> vo.getLevel() == 0).findFirst().orElse(null);
+        EqptMenuVo root = eqptMenus.stream().filter(vo -> vo.getLevel() == 0).findFirst().orElse(null);
+        int maxDepth = eqptMenus.stream().mapToInt(EqptMenuVo::getLevel).max().orElse(0);
 
-        List<EqptMenuVo> firstDepths = eqptMenus.stream()
-                .filter(vo -> vo.getLevel() == 1).collect(Collectors.toList());
-        root.setChildren(firstDepths);
-
-        for(EqptMenuVo firstDepth : firstDepths) {
-            List<EqptMenuVo> secondDepths = eqptMenus.stream()
-                    .filter(vo -> vo.getPrntMenuCd().equals(firstDepth.getMenuCd())).collect(Collectors.toList());
-            firstDepth.setChildren(secondDepths);
-            for(EqptMenuVo secondDepth : secondDepths) {
-                List<EqptMenuVo> thirdDepths = eqptMenus.stream()
-                        .filter(vo -> vo.getPrntMenuCd().equals(secondDepth.getMenuCd())).collect(Collectors.toList());
-                secondDepth.setChildren(thirdDepths);
+        for (int i = 1; i <= maxDepth; i++) {
+            final int finalI = i;
+            List<EqptMenuVo> currentDepth = eqptMenus.stream()
+                    .filter(vo -> vo.getLevel() == finalI).collect(Collectors.toList());
+            if(i == 1) {
+                root.setChildren(currentDepth);
+            }
+            for (EqptMenuVo current : currentDepth) {
+                List<EqptMenuVo> children = eqptMenus.stream()
+                        .filter(vo -> vo.getPrntMenuCd().equals(current.getMenuCd())).collect(Collectors.toList());
+                current.setChildren(children);
             }
         }
 
