@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,12 @@ public class EqptService {
             for (EqptMenuVo current : currentDepth) {
                 List<EqptMenuVo> children = eqptMenus.stream()
                         .filter(vo -> vo.getPrntMenuCd().equals(current.getMenuCd())).collect(Collectors.toList());
-                current.setChildren(children);
+                if(ObjectUtils.isEmpty(children)) {
+                    // 장비 아이템 리스트 세팅하기
+                    // 장비 아이템은 children 노드를 가지면 안된다.
+                } else {
+                    current.setChildren(children);
+                }
             }
         }
 
