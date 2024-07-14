@@ -1,6 +1,7 @@
 package com.example.treeresponseapi.domain.part;
 
 import com.example.treeresponseapi.vo.EqptMenuVo;
+import lombok.ToString;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -42,7 +43,7 @@ public interface PartRepository extends JpaRepository<Part, Long> {
         String getMenuNm();
         String getMenuCd();
         String getPrntMenuCd();
-        String getLevel();
+        int getLevel();
         String getLeafYn();
     }
 }
