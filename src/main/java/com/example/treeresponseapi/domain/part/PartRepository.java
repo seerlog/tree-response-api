@@ -4,6 +4,7 @@ import com.example.treeresponseapi.vo.EqptMenuVo;
 import lombok.ToString;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -33,10 +34,10 @@ public interface PartRepository extends JpaRepository<Part, Long> {
             "FROM " +
             "    eqpt_menu em " +
             "        LEFT OUTER JOIN " +
-            "    (SELECT *, 'Y' AS LEAF_YN FROM eqpt WHERE eqpt.loc LIKE '%문화관%') e " +
+            "    (SELECT *, 'Y' AS LEAF_YN FROM eqpt WHERE eqpt.loc LIKE %:keyword%) e " +
             "        ON em.menu_cd = e.eqpt_menu_prnt_menu_cd " +
             "GROUP BY em.MENU_NM ", nativeQuery = true)
-    List<EqptMenuNativeVo> getEqptMenuList();
+    List<EqptMenuNativeVo> getEqptMenuList(@Param("keyword") String keyword);
 
     interface EqptMenuNativeVo {
         String getPartCd();
